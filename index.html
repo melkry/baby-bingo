@@ -4,9 +4,14 @@
   <meta charset="UTF-8">
   <title>Baby Bingo</title>
   <style>
+
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
     body {
       font-family: sans-serif;
-      padding: 20px;
     }
 
     #controls {
@@ -14,9 +19,15 @@
     }
 
     #card-container {
+      width: 100%;
+    }
+
+    .bingo-card {
       display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      width: 50%;
+      padding: 1rem;
     }
 
     .card {
@@ -24,10 +35,8 @@
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       grid-template-rows: repeat(5, 1fr);
-      width: 250px;
-      height: 250px;
       text-align: center;
-      font-size: 12px;
+      font-size: 1.5vw;
       justify-items: center;
       align-items: center;
       page-break-inside: avoid;
@@ -102,8 +111,11 @@
 
     for (let i = 0; i < 2; i++) { // generate 2 cards
       const cardData = generateSingleCard();
+      const bingoCard = document.createElement('div');
+      bingoCard.className = 'bingo-card';
       const card = document.createElement('div');
       card.className = 'card';
+      bingoCard.appendChild(card);
       cardData.forEach(item => {
         const cell = document.createElement('div');
         cell.className = 'cell';
@@ -113,7 +125,7 @@
         cell.textContent = item;
         card.appendChild(cell);
       });
-      container.appendChild(card);
+      container.appendChild(bingoCard);
     }
   }
 
