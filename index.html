@@ -1,1 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Baby Bingo</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
 
+    #controls {
+      margin-bottom: 20px;
+    }
+
+    #card-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      border: 2px solid #000;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      width: 250px;
+      height: 250px;
+      text-align: center;
+      font-size: 12px;
+      justify-items: center;
+      align-items: center;
+      page-break-inside: avoid;
+    }
+
+    .cell {
+      border: 1px solid #ccc;
+      padding: 5px;
+    }
+
+    .free {
+      background: #ddd;
+      font-weight: bold;
+    }
+
+    @media print {
+      #controls {
+        display: none;
+      }
+      body {
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="controls">
+  <button onclick="generateCards()">Randomize Bingo Cards</button>
+</div>
+
+<div id="card-container"></div>
+
+<script>
+  const bingoItems = [
+    "Stroller", "Bassinet", "High Chair", "Baby Swing", "Baby Carrier", "Diaper Bag",
+    "Baby Monitor", "Nursing Pillow", "Baby Blanket", "Burp Cloths", "Pacifiers",
+    "Teething Toys", "Onesie", "Diapers", "Wipes", "Baby book", "Baby Lotion",
+    "Baby Shampoo", "Thermometer", "Nail Clippers", "Humidifier", "Night Light",
+    "Toy", "Playpen", "Crib Sheets", "Changing Table", "Diaper Caddy", "Baby bottle",
+    "Washcloths", "Baby towel", "Diaper Cream", "Socks", "Mittens", "Hat",
+    "Nasal Aspirator", "Brush/Comb", "Bib"
+  ];
+
+  function shuffle(array) {
+    // Fisher-Yates shuffle
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  function generateSingleCard() {
+    const items = [...bingoItems];
+    shuffle(items);
+    const selected = items.slice(0, 24); // we need 24 items (middle is free)
+
+    const card = [];
+    for (let i = 0; i < 25; i++) {
+      if (i === 12) {
+        card.push("FREE SPACE");
+      } else {
+        card.push(selected.shift());
+      }
+    }
+    return card;
+  }
+
+  function generateCards() {
+    const container = document.getElementById('card-container');
+    container.innerHTML = ''; // Clear old cards
+
+    for (let i = 0; i < 2; i++) { // generate 2 cards
+      const cardData = generateSingleCard();
+      const card = document.createElement('div');
+      card.className = 'card';
+      cardData.forEach(item => {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        if (item === "FREE SPACE") {
+          cell.classList.add('free');
+        }
+        cell.textContent = item;
+        card.appendChild(cell);
+      });
+      container.appendChild(card);
+    }
+  }
+
+  // Initial generation
+  generateCards();
+</script>
+
+</body>
+</html>
